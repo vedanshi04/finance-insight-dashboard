@@ -4,6 +4,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from src.auth import auth_guard
 
+
 # Theme-aware(Drak or light) color scheme
 THEME_BASE = st.get_option("theme.base")
 PLOTLY_COLORS = px.colors.qualitative.Dark24 if THEME_BASE == "dark" else px.colors.qualitative.Set2

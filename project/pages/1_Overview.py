@@ -32,7 +32,7 @@ if uploaded_file:
     except Exception as e:
         st.error(f"❌ Error: {e}")
 
-    
+
 # Links between pages
 col1, col2, col3 = st.columns(3)
 with col1:
@@ -46,3 +46,4 @@ with col2:
 with col3:
     if st.button("📈 Go to Data Visualization"):
         st.switch_page("pages/3_Data_Visualization.py")
+        

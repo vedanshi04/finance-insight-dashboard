@@ -60,7 +60,6 @@ with st.expander("Detected Column Types : "):
         st.write(f"**{col}** → `{ctype}`")
 
 
-
 # Function to highlight changes in clean dataframe
 def highlight_cleaned_changes(raw, cleaned):
     def style_func(val_raw, val_clean):

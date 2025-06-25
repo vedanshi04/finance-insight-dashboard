@@ -165,6 +165,7 @@ def detect_column_types(df):
                 column_types[col] = "categorical"
                 continue  # Don't try to make this numeric
             
+            
             # Such works will be converted & treated as NaN
             cleaned = series.astype(str).str.strip()
             cleaned = cleaned.replace(['$', '$-', '-', 'None', 'none', 'nan', 'NaN', ''], pd.NA)

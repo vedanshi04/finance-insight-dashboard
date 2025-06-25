@@ -1,12 +1,11 @@
-# -------------------- home.py --------------------
 import streamlit as st
 from src.auth import auth_guard
 
 auth_guard()
-# ------------------- PAGE CONFIG -------------------
+# PAGE CONFIG
 st.set_page_config(page_title="Finance Visualizer & Summarizer", layout="wide")
 
-# ------------------- MAIN PAGE -------------------
+# MAIN PAGE
 st.title("📊 Visual & Summarizing Finance App")
 st.subheader("Navigate using the sidebar or click below:")
 

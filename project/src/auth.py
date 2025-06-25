@@ -19,6 +19,7 @@ def auth_guard():
             </style>
         """, unsafe_allow_html=True)
 
+
         # Show login form
         st.title("🔐 Login Required")
         username = st.text_input("Username")

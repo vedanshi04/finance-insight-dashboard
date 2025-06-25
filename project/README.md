@@ -30,8 +30,10 @@ finance-insight-dashboard/
 │   ├── 2_Data_Analysis.py
 │   └── 3_Data_Visualization.py
 ├── src/                     # Core logic and utilities
+│   ├── auth.py
 │   └── preprocess.py
-├── .streamlit/              # Streamlit config (e.g., theme, secrets)
+├── .streamlit
+│   └── config.toml          # Streamlit config (e.g., theme, secrets)
 ├── requirements.txt         # Python dependencies
 ├── .gitignore               # Files to ignore in Git
 └── README.md                # You're reading it
@@ -54,8 +56,8 @@ finance-insight-dashboard/
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/finance-ai-dashboard.git
-cd finance-ai-dashboard
+git clone https://github.com/vedanshi04/finance-insight-dashboard.git
+cd finance-insight-dashboard
 ```
 
 ### 2. Set Up a Virtual Environment (with `uv`)
@@ -88,7 +90,7 @@ streamlit run Home.py
 
 You can view the hosted version here:
 
-👉 [https://finance-insight-dashboard.streamlit.app](https://finance-insight-dashboard.streamlit.app)
+👉 [https://finance-insight-dashboard.streamlit.app/Data_Visualization](https://finance-insight-dashboard.streamlit.app)
 
 *(Note: Deployment powered by [Streamlit Cloud](https://streamlit.io/cloud))*
 
