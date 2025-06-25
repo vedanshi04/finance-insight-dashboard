@@ -153,7 +153,7 @@ def detect_column_types(df):
         if series.dtype == 'object':
             lower_series = series.astype(str).str.strip().str.lower()
             unique_vals = set(lower_series.dropna().unique())
-            boolean_values = {"true", "false", "yes", "no", "1", "0"}
+            boolean_values = {"true", "false", "yes", "no", 1, 0}
 
             if unique_vals.issubset(boolean_values):
                 column_types[col] = "boolean"
@@ -178,7 +178,8 @@ def detect_column_types(df):
             if is_percent.any():
                 numeric_series[is_percent] = numeric_series[is_percent] / 100.0
 
-            if numeric_series.notna().sum() > 0:
+            if numeric_series.notna().mean() >= 0.7:
+
                 cleaned_df[col] = numeric_series
                 column_types[col] = "numeric"
                 continue
@@ -188,8 +189,13 @@ def detect_column_types(df):
             continue
 
         if pd.api.types.is_numeric_dtype(series):
-            column_types[col] = "numeric"
+            unique_vals = set(series.dropna().unique())
+            if unique_vals.issubset({0, 1}):
+                column_types[col] = "boolean"
+            else:
+                column_types[col] = "numeric"
             continue
+
 
         if series.dtype == 'object' or series.dtype.name == 'category':
             nunique = series.nunique(dropna=True)
@@ -246,8 +252,11 @@ def convert_erroneous_numeric_columns(df, threshold=0.7):
             if contains_duration_like_phrases(df[col]):
                 continue
             
+            cleaned = df[col].astype(str).str.strip()
+            cleaned = cleaned.replace(['$', '-', 'None', 'none', 'nan', 'NaN', ''], pd.NA)
+            cleaned = cleaned.str.replace(r'[^\d\.\-]', '', regex=True)
             
-            coerced = pd.to_numeric(df[col], errors='coerce')
+            coerced = pd.to_numeric(cleaned, errors='coerce')
             numeric_fraction = coerced.notna().mean()
 
             if numeric_fraction >= threshold:

@@ -2,10 +2,11 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+from collections import Counter
 from src.auth import auth_guard
 
 
-# Theme-aware(Drak or light) color scheme
+# Theme-aware colors
 THEME_BASE = st.get_option("theme.base")
 PLOTLY_COLORS = px.colors.qualitative.Dark24 if THEME_BASE == "dark" else px.colors.qualitative.Set2
 
@@ -21,28 +22,32 @@ if "clean_df" not in st.session_state:
     st.stop()
 
 df = st.session_state["clean_df"]
+column_types = st.session_state.get("column_types", {})
 
+
+# Session state init
 if "plots" not in st.session_state:
     st.session_state["plots"] = []
 
 if st.button("🗑️ Clear All Plots"):
     st.session_state["plots"] = []
 
-# Column type lists 
-numeric_cols = df.select_dtypes(include=["number"]).columns.tolist()
-categorical_cols = [col for col in df.columns if st.session_state["column_types"].get(col) == "categorical"]
-boolean_cols = [col for col in df.columns if st.session_state["column_types"].get(col) == "boolean"]
-datetime_cols = [col for col in df.columns if pd.api.types.is_datetime64_any_dtype(df[col])]
+# Typed column groups
+numeric_cols = [col for col, typ in column_types.items() if typ == "numeric"]
+categorical_cols = [col for col, typ in column_types.items() if typ == "categorical"]
+boolean_cols = [col for col, typ in column_types.items() if typ == "boolean"]
+datetime_cols = [col for col, typ in column_types.items() if typ == "datetime"]
+text_cols = [col for col, typ in column_types.items() if typ == "text"]
 
+# Sidebar: Column type selector
 st.sidebar.header("🔧 Plot Controls")
-col_type = st.sidebar.radio("Column Type", ["Numeric", "Categorical", "Boolean", "Datetime", "Mixed"])
+col_type = st.sidebar.radio("Column Type", ["Numeric", "Categorical", "Boolean", "Datetime", "Text", "Mixed"])
 
-# Numeric plots
+# Plot Controls 
 if col_type == "Numeric" and numeric_cols:
     selected_cols = st.sidebar.multiselect("Select numeric columns", numeric_cols, key="numeric_cols")
     plot_options = []
-     
-    # Options given according to number of chosen columns
+
     if len(selected_cols) == 1:
         plot_options = ["Histogram", "Box Plot", "Line Plot", "Area Plot"]
     elif len(selected_cols) == 2:
@@ -60,7 +65,6 @@ if col_type == "Numeric" and numeric_cols:
                 "columns": selected_cols.copy()
             })
 
-# Categorical charts
 elif col_type == "Categorical" and categorical_cols:
     selected_cols = st.sidebar.multiselect("Select categorical columns", categorical_cols, key="cat_cols")
     cat_plot_type = st.sidebar.radio("Plot Type", ["Bar Plot", "Pie Chart", "Treemap"], key="cat_plot_type")
@@ -78,7 +82,6 @@ elif col_type == "Categorical" and categorical_cols:
                 "value_col": agg_col
             })
 
-# Boolean charts
 elif col_type == "Boolean" and boolean_cols:
     selected_cols = st.sidebar.multiselect("Select boolean columns", boolean_cols, key="bool_cols")
     if st.sidebar.button("➕ Add Plot"):
@@ -88,7 +91,6 @@ elif col_type == "Boolean" and boolean_cols:
                 "column": col
             })
 
-# Datetime plots
 elif col_type == "Datetime" and datetime_cols:
     selected_col = st.sidebar.selectbox("Select datetime column", datetime_cols, key="dt_col")
     freq = st.sidebar.selectbox("Resample Frequency", ["D", "W", "ME", "QE", "YE"], index=2, key="dt_freq")
@@ -107,7 +109,16 @@ elif col_type == "Datetime" and datetime_cols:
             "value_col": value_col
         })
 
-#  Mixed (Cat × Cat Heatmap) 
+elif col_type == "Text" and text_cols:
+    selected_col = st.sidebar.selectbox("Select text column", text_cols, key="text_col")
+    max_words = st.sidebar.slider("Top N frequent words", 5, 50, 15)
+    if st.sidebar.button("➕ Add Word Frequency Plot"):
+        st.session_state["plots"].append({
+            "type": "text",
+            "column": selected_col,
+            "top_n": max_words
+        })
+
 elif col_type == "Mixed":
     st.sidebar.markdown("Create a heatmap between two categorical columns")
     cat1 = st.sidebar.selectbox("Categorical Column 1", categorical_cols, key="cat1")
@@ -120,7 +131,7 @@ elif col_type == "Mixed":
             "col": cat2
         })
 
-# Plot Rendering as chosen from sidebar
+# Plot Rendering
 left_col, right_col = st.columns(2)
 
 for i, plot_data in enumerate(st.session_state["plots"]):
@@ -199,9 +210,12 @@ for i, plot_data in enumerate(st.session_state["plots"]):
                 elif plot_data["type"] == "boolean":
                     colname = plot_data["column"]
                     counts = df[colname].value_counts().reset_index()
+                    # Keep 0 and 1 as labels
                     counts.columns = [colname, 'count']
+                    counts[colname] = counts[colname].astype(str)  # ensure string labels
                     fig = px.pie(counts, names=colname, values='count',
-                                 color=colname, color_discrete_sequence=PLOTLY_COLORS, hole=0.4)
+                        color=colname, color_discrete_sequence=PLOTLY_COLORS, hole=0.4)
+
                     st.subheader(f"🔸 Pie Chart of Boolean Column {colname}")
                     st.plotly_chart(fig, use_container_width=True)
 
@@ -243,10 +257,23 @@ for i, plot_data in enumerate(st.session_state["plots"]):
                     st.subheader(f" 🔸Heatmap: {row} × {col_}")
                     st.plotly_chart(fig, use_container_width=True)
 
+                elif plot_data["type"] == "text":
+                    colname = plot_data["column"]
+                    top_n = plot_data["top_n"]
+                    text_data = df[colname].dropna().astype(str).str.cat(sep=' ')
+                    words = [word.lower() for word in text_data.split()]
+                    word_counts = Counter(words)
+                    most_common = word_counts.most_common(top_n)
+                    freq_df = pd.DataFrame(most_common, columns=['Word', 'Frequency'])
+                    fig = px.bar(freq_df, x='Word', y='Frequency', color='Word',
+                                 color_discrete_sequence=PLOTLY_COLORS)
+                    st.subheader(f"🔸 Word Frequency for {colname}")
+                    st.plotly_chart(fig, use_container_width=True)
+
             except Exception as e:
                 st.error(f"⚠️ Error rendering plot: {e}")
 
-# Links between pages and logout button
+# Navigation links
 col1, col2, col3, col4, col5 = st.columns(5)
 with col1:
     if st.button("Back to Home"):
@@ -256,7 +283,7 @@ with col2:
         st.switch_page("pages/1_File_Upload.py")
 with col3:
     if st.button("Back to Data Analysis"):
-        st.switch_page("pages/2_Data_Analysis.py")        
+        st.switch_page("pages/2_Data_Analysis.py")
 with col4:
     if st.button(" Go to OpenAI Summary"):
         st.switch_page("pages/4_OpenAI_Summary.py")
@@ -264,3 +291,4 @@ with col5:
     if st.button("Logout"):
         st.session_state.authenticated = False
         st.rerun()
+

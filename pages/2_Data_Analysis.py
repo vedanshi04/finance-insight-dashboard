@@ -3,6 +3,9 @@ import pandas as pd
 from src.auth import auth_guard
 from src.preprocess import preprocess
 
+pd.set_option("styler.render.max_elements", 300000)
+
+
 st.set_page_config(page_title="Data Analyser", layout="wide")
 
 auth_guard()
