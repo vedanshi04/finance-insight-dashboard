@@ -16,6 +16,8 @@ st.title("📊 Dynamic Financial Visualizations")
 
 if "clean_df" not in st.session_state:
     st.warning("Please upload and preprocess data on the 'Overview' page.")
+    if st.button("Go to File Upload"):
+        st.switch_page("pages/1_File_Upload.py")
     st.stop()
 
 df = st.session_state["clean_df"]
@@ -245,7 +247,7 @@ for i, plot_data in enumerate(st.session_state["plots"]):
                 st.error(f"⚠️ Error rendering plot: {e}")
 
 # Links between pages and logout button
-col1, col2, col3, col4 = st.columns(4)
+col1, col2, col3, col4, col5 = st.columns(5)
 with col1:
     if st.button("Back to Home"):
         st.switch_page("Home.py")
@@ -254,8 +256,11 @@ with col2:
         st.switch_page("pages/1_File_Upload.py")
 with col3:
     if st.button("Back to Data Analysis"):
-        st.switch_page("pages/2_Data_Analysis.py")
+        st.switch_page("pages/2_Data_Analysis.py")        
 with col4:
+    if st.button(" Go to OpenAI Summary"):
+        st.switch_page("pages/4_OpenAI_Summary.py")
+with col5:
     if st.button("Logout"):
         st.session_state.authenticated = False
         st.rerun()

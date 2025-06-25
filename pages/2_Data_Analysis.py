@@ -10,7 +10,9 @@ auth_guard()
 st.title("📄Data Analysis")
 
 if "clean_df" not in st.session_state or "raw_df" not in st.session_state:
-    st.warning("Please upload and preprocess data on the 'Overview' page.")
+    st.warning("Please upload and preprocess data on the 'File Upload' page.")
+    if st.button("Go to File Upload"):
+        st.switch_page("pages/1_File_Upload.py")
     st.stop()
 
 
@@ -104,7 +106,7 @@ if logs:
 
 st.markdown("---")
 # Links for multiple pages
-col1, col2, col3 = st.columns(3)
+col1, col2, col3, col4 = st.columns(4)
 with col1:
     if st.button("Back to Home"):
         st.switch_page("Home.py")
@@ -116,3 +118,7 @@ with col2:
 with col3:
     if st.button("Go to Data Visualization"):
         st.switch_page("pages/3_Data_Visualization.py")
+        
+with col4:
+    if st.button(" Go to OpenAI Summary"):
+        st.switch_page("pages/4_OpenAI_Summary.py")
