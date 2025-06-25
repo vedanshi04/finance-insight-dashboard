@@ -2,15 +2,17 @@ import streamlit as st
 import openai
 from openai import OpenAIError
 
+# THIS ONLY FOR TESTING PURPOSE, OPENAI DOES NOT WORK WITHOUT PREMIUM SUBSCRIPTION OF API
+
 st.set_page_config(page_title="Summary", page_icon="📝")
 st.title("📝 Data Summarization")
 
 # Safely load API key
-if "openai" in st.secrets:
-    openai.api_key = st.secrets["openai"]["api_key"]
-else:
-    st.error("🔐 OpenAI API key not found in secrets. Please add it to .streamlit/secrets.toml.")
-    st.stop()
+# if "openai" in st.secrets:
+#     openai.api_key = st.secrets["openai"]["api_key"]
+# else:
+#     st.error("🔐 OpenAI API key not found in secrets. Please add it to .streamlit/secrets.toml.")
+#     st.stop()
 
     
 # Check for clean_df in session state
