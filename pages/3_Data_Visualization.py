@@ -124,7 +124,7 @@ left_col, right_col = st.columns(2)
 for i, plot_data in enumerate(st.session_state["plots"]):
     col = left_col if i % 2 == 0 else right_col
     with col:
-        with st.expander(f"🔍 Plot {i+1}", expanded=True):
+        with st.expander(f"🔸 Plot {i+1}", expanded=True):
             try:
                 if plot_data["type"] == "numeric":
                     cols = plot_data["columns"]
@@ -132,42 +132,42 @@ for i, plot_data in enumerate(st.session_state["plots"]):
 
                     if plot == "Histogram" and len(cols) == 1:
                         fig = px.histogram(df, x=cols[0], nbins=30, color_discrete_sequence=PLOTLY_COLORS)
-                        st.subheader(f"📊 Histogram of {cols[0]}")
+                        st.subheader(f"🔸 Histogram of {cols[0]}")
                         st.plotly_chart(fig, use_container_width=True)
 
                     elif plot == "Box Plot":
                         fig = px.box(df, y=cols, color_discrete_sequence=PLOTLY_COLORS)
-                        st.subheader(f"📦 Box Plot of {', '.join(cols)}")
+                        st.subheader(f"🔸 Box Plot of {', '.join(cols)}")
                         st.plotly_chart(fig, use_container_width=True)
 
                     elif plot == "Line Plot":
                         melted = df[cols].reset_index().melt(id_vars="index", var_name="Variable", value_name="Value")
                         fig = px.line(melted, x="index", y="Value", color="Variable",
                                       color_discrete_sequence=PLOTLY_COLORS)
-                        st.subheader(f"📈 Line Plot of {', '.join(cols)}")
+                        st.subheader(f"🔸 Line Plot of {', '.join(cols)}")
                         st.plotly_chart(fig, use_container_width=True)
 
                     elif plot == "Scatter Plot" and len(cols) == 2:
                         fig = px.scatter(df, x=cols[0], y=cols[1], color_discrete_sequence=PLOTLY_COLORS)
-                        st.subheader(f"🔵 Scatter Plot: {cols[0]} vs {cols[1]}")
+                        st.subheader(f"🔸 Scatter Plot: {cols[0]} vs {cols[1]}")
                         st.plotly_chart(fig, use_container_width=True)
 
                     elif plot == "Correlation Heatmap":
                         corr = df[cols].corr()
                         fig = px.imshow(corr, text_auto=True, color_continuous_scale="RdBu_r")
-                        st.subheader("🧮 Correlation Heatmap")
+                        st.subheader("🔸 Correlation Heatmap")
                         st.plotly_chart(fig, use_container_width=True)
 
                     elif plot == "Pair Plot":
                         fig = px.scatter_matrix(df, dimensions=cols, color_discrete_sequence=PLOTLY_COLORS)
-                        st.subheader("🔗 Pair Plot")
+                        st.subheader("🔸 Pair Plot")
                         st.plotly_chart(fig, use_container_width=True)
 
                     elif plot == "Area Plot":
                         melted = df[cols].reset_index().melt(id_vars="index", var_name="Variable", value_name="Value")
                         fig = px.area(melted, x="index", y="Value", color="Variable",
                                       color_discrete_sequence=PLOTLY_COLORS)
-                        st.subheader(f"🟢 Area Plot of {', '.join(cols)}")
+                        st.subheader(f"🔸 Area Plot of {', '.join(cols)}")
                         st.plotly_chart(fig, use_container_width=True)
 
                 elif plot_data["type"] == "categorical":
@@ -180,17 +180,17 @@ for i, plot_data in enumerate(st.session_state["plots"]):
                     if plot_type == "Bar Plot":
                         fig = px.bar(counts, x=colname, y='count',
                                      color=colname, color_discrete_sequence=PLOTLY_COLORS)
-                        st.subheader(f"📊 Bar Plot of {colname}")
+                        st.subheader(f"🔸 Bar Plot of {colname}")
 
                     elif plot_type == "Pie Chart":
                         fig = px.pie(counts, names=colname, values='count',
                                      color=colname, color_discrete_sequence=PLOTLY_COLORS, hole=0.4)
-                        st.subheader(f"🥧 Pie Chart of {colname}")
+                        st.subheader(f"🔸 Pie Chart of {colname}")
 
                     elif plot_type == "Treemap" and value_col:
                         fig = px.treemap(df, path=[colname], values=value_col,
                                          color=colname, color_discrete_sequence=PLOTLY_COLORS)
-                        st.subheader(f"🌳 Treemap: {colname} by {value_col}")
+                        st.subheader(f"🔸 Treemap: {colname} by {value_col}")
 
                     st.plotly_chart(fig, use_container_width=True)
 
@@ -200,7 +200,7 @@ for i, plot_data in enumerate(st.session_state["plots"]):
                     counts.columns = [colname, 'count']
                     fig = px.pie(counts, names=colname, values='count',
                                  color=colname, color_discrete_sequence=PLOTLY_COLORS, hole=0.4)
-                    st.subheader(f"🥧 Pie Chart of Boolean Column {colname}")
+                    st.subheader(f"🔸 Pie Chart of Boolean Column {colname}")
                     st.plotly_chart(fig, use_container_width=True)
 
                 elif plot_data["type"] == "datetime":
@@ -227,7 +227,7 @@ for i, plot_data in enumerate(st.session_state["plots"]):
                         continue
 
                     fig = px.line(ts, x=colname, y=y_col, markers=True,
-                                  title=f"📆 Time Series ({freq}) – {title}",
+                                  title=f"> Time Series ({freq}) – {title}",
                                   labels={y_col: title, colname: "Date"},
                                   color_discrete_sequence=PLOTLY_COLORS)
                     fig.update_layout(xaxis_title="Date", yaxis_title=title, hovermode="x unified")
@@ -238,7 +238,7 @@ for i, plot_data in enumerate(st.session_state["plots"]):
                     col_ = plot_data["col"]
                     heat_df = pd.crosstab(df[row], df[col_])
                     fig = px.imshow(heat_df, text_auto=True, color_continuous_scale="Viridis")
-                    st.subheader(f"🔥 Heatmap: {row} × {col_}")
+                    st.subheader(f" 🔸Heatmap: {row} × {col_}")
                     st.plotly_chart(fig, use_container_width=True)
 
             except Exception as e:
@@ -247,15 +247,15 @@ for i, plot_data in enumerate(st.session_state["plots"]):
 # Links between pages and logout button
 col1, col2, col3, col4 = st.columns(4)
 with col1:
-    if st.button("🏠 Back to Home"):
+    if st.button("Back to Home"):
         st.switch_page("Home.py")
 with col2:
-    if st.button("📁 Back to File Upload "):
-        st.switch_page("pages/1_Overview.py")
+    if st.button("Back to File Upload "):
+        st.switch_page("pages/1_File_Upload.py")
 with col3:
-    if st.button("📊 Back to Data Analysis"):
+    if st.button("Back to Data Analysis"):
         st.switch_page("pages/2_Data_Analysis.py")
 with col4:
-    if st.button("🚪 Logout"):
+    if st.button("Logout"):
         st.session_state.authenticated = False
         st.rerun()

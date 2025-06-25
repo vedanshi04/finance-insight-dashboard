@@ -7,7 +7,7 @@ st.set_page_config(page_title="Data Analyser", layout="wide")
 
 auth_guard()
 
-st.title("Data Analysis")
+st.title("📄Data Analysis")
 
 if "clean_df" not in st.session_state or "raw_df" not in st.session_state:
     st.warning("Please upload and preprocess data on the 'Overview' page.")
@@ -76,39 +76,43 @@ def highlight_cleaned_changes(raw, cleaned):
 
     return cleaned.style.apply(lambda _: styles, axis=None)
 
+st.markdown("---")
 
 # 2 columns for raw and clean df
 col1, col2 = st.columns(2)
 
 with col1:
-    st.markdown("### 📄 Raw Data")
+    st.markdown("### Raw Data: ")
     st.dataframe(raw_df, use_container_width=True)
 
 with col2:
-    st.markdown("### 🧼 Cleaned Data")
+    st.markdown("### Clean Data:")
     styled_clean = highlight_cleaned_changes(raw_df, clean_df)
     st.dataframe(styled_clean, use_container_width=True)
 
+st.markdown("---")
 
 # Show preprocessing logs
 st.markdown("### 🧾 Preprocessing Summary")
 if logs:
     if logs.get("dropped_columns"):
-        st.info(f"🗂 Dropped Columns (≥50% missing): {', '.join(logs['dropped_columns'])}")
-    st.info(f"📛 Duplicates removed: {logs.get('duplicates_removed', 0)}")
+        st.info(f"> Dropped Columns (≥50% missing): {', '.join(logs['dropped_columns'])}")
+    st.info(f"> Duplicates removed: {logs.get('duplicates_removed', 0)}")
     if remove_outliers:
-        st.warning(f"📉 Outliers removed: {logs.get('outliers_removed', 0)}")
+        st.warning(f"> Outliers removed: {logs.get('outliers_removed', 0)}")
 
+
+st.markdown("---")
 # Links for multiple pages
 col1, col2, col3 = st.columns(3)
 with col1:
-    if st.button("🏠 Back to Home"):
+    if st.button("Back to Home"):
         st.switch_page("Home.py")
 
 with col2:
-    if st.button("📁 Back to File Upload"):
-        st.switch_page("pages/1_Overview.py")
+    if st.button("Back to File Upload"):
+        st.switch_page("pages/1_File_Upload.py")
 
 with col3:
-    if st.button("📈 Go to Data Visualization"):
+    if st.button("Go to Data Visualization"):
         st.switch_page("pages/3_Data_Visualization.py")

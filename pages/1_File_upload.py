@@ -7,10 +7,13 @@ st.set_page_config(page_title="Overview of Finance Analyzer & Visualiser", layou
 
 auth_guard()
 
-st.title(f"UPLOAD FILE TO ANALYZE")
+st.title(f"🔸Upload File to Clean")
+st.markdown("---")
+ 
+ 
 # File uploader that takes csv/xlsx as input 
 uploaded_file = st.file_uploader(
-    "📁 Upload a .csv or .xlsx file here:",
+    " Upload a .csv or .xlsx file here:",
     type=["csv", "xlsx"],
     accept_multiple_files=False
 )
@@ -32,18 +35,20 @@ if uploaded_file:
     except Exception as e:
         st.error(f"❌ Error: {e}")
 
+st.markdown("---")
+
 
 # Links between pages
 col1, col2, col3 = st.columns(3)
 with col1:
-    if st.button("🏠 Back to Home"):
+    if st.button(" Back to Home"):
         st.switch_page("Home.py")
 
 with col2:
-    if st.button("📊 Go to Data Analysis"):
+    if st.button(" Go to Data Analysis"):
         st.switch_page("pages/2_Data_Analysis.py")
 
 with col3:
-    if st.button("📈 Go to Data Visualization"):
+    if st.button(" Go to Data Visualization"):
         st.switch_page("pages/3_Data_Visualization.py")
         

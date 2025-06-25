@@ -90,7 +90,7 @@ streamlit run Home.py
 
 You can view the hosted version here:
 
-👉 [https://finance-insight-dashboard.streamlit.app/Data_Visualization](https://finance-insight-dashboard.streamlit.app)
+👉 [https://finance-insight-dashboard.streamlit.app/](https://finance-insight-dashboard.streamlit.app)
 
 *(Note: Deployment powered by [Streamlit Cloud](https://streamlit.io/cloud))*
 
