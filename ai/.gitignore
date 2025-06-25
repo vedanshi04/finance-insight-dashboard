@@ -1,0 +1,45 @@
+# === Virtual environment ===
+.venv/
+env/
+venv/
+
+# === Python cache files ===
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# === System files ===
+.DS_Store
+Thumbs.db
+
+# === IDE/project settings ===
+.vscode/
+.idea/
+*.code-workspace
+
+# === Jupyter and IPython ===
+.ipynb_checkpoints/
+*.ipynb
+
+# === Logs and databases ===
+*.log
+*.sqlite3
+*.db
+
+# === Streamlit config ===
+.streamlit/secrets.toml
+.streamlit/config.toml
+
+# === Environment files ===
+.env
+.env.*
+
+# === MacOS/Linux trash ===
+.Trashes
+*.swp
+
+# === Deployment-specific ===
+dist/
+build/
+*.egg-info/
