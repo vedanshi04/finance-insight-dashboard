@@ -8,14 +8,14 @@ st.set_page_config(page_title="Overview of Finance Analyzer & Visualiser", layou
 auth_guard()
 
 st.title(f"UPLOAD FILE TO ANALYZE")
-# File uploader
+# File uploader that takes csv/xlsx as input 
 uploaded_file = st.file_uploader(
     "📁 Upload a .csv or .xlsx file here:",
     type=["csv", "xlsx"],
     accept_multiple_files=False
 )
 
-# Process the uploaded file
+# Call preprocess function and store returned values
 if uploaded_file:
     try:
         raw_df, clean_df, column_types, logs = preprocess(uploaded_file)
@@ -29,15 +29,11 @@ if uploaded_file:
 
         st.success("✅ File processed successfully!")
 
-        dropped_cols = set(raw_df.columns) - set(clean_df.columns)
-        if dropped_cols:
-            st.info(f"ℹ️ Some columns were dropped due to missing values: {', '.join(dropped_cols)}")
-
     except Exception as e:
         st.error(f"❌ Error: {e}")
 
     
-
+# Links between pages
 col1, col2, col3 = st.columns(3)
 with col1:
     if st.button("🏠 Back to Home"):

@@ -4,7 +4,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from src.auth import auth_guard
 
-# Theme-aware color scheme
+# Theme-aware(Drak or light) color scheme
 THEME_BASE = st.get_option("theme.base")
 PLOTLY_COLORS = px.colors.qualitative.Dark24 if THEME_BASE == "dark" else px.colors.qualitative.Set2
 
@@ -25,7 +25,7 @@ if "plots" not in st.session_state:
 if st.button("🗑️ Clear All Plots"):
     st.session_state["plots"] = []
 
-# Column type lists
+# Column type lists 
 numeric_cols = df.select_dtypes(include=["number"]).columns.tolist()
 categorical_cols = [col for col in df.columns if st.session_state["column_types"].get(col) == "categorical"]
 boolean_cols = [col for col in df.columns if st.session_state["column_types"].get(col) == "boolean"]
@@ -34,11 +34,12 @@ datetime_cols = [col for col in df.columns if pd.api.types.is_datetime64_any_dty
 st.sidebar.header("🔧 Plot Controls")
 col_type = st.sidebar.radio("Column Type", ["Numeric", "Categorical", "Boolean", "Datetime", "Mixed"])
 
-# --- Numeric ---
+# Numeric plots
 if col_type == "Numeric" and numeric_cols:
     selected_cols = st.sidebar.multiselect("Select numeric columns", numeric_cols, key="numeric_cols")
     plot_options = []
-
+     
+    # Options given according to number of chosen columns
     if len(selected_cols) == 1:
         plot_options = ["Histogram", "Box Plot", "Line Plot", "Area Plot"]
     elif len(selected_cols) == 2:
@@ -56,7 +57,7 @@ if col_type == "Numeric" and numeric_cols:
                 "columns": selected_cols.copy()
             })
 
-# --- Categorical ---
+# Categorical charts
 elif col_type == "Categorical" and categorical_cols:
     selected_cols = st.sidebar.multiselect("Select categorical columns", categorical_cols, key="cat_cols")
     cat_plot_type = st.sidebar.radio("Plot Type", ["Bar Plot", "Pie Chart", "Treemap"], key="cat_plot_type")
@@ -74,7 +75,7 @@ elif col_type == "Categorical" and categorical_cols:
                 "value_col": agg_col
             })
 
-# --- Boolean ---
+# Boolean charts
 elif col_type == "Boolean" and boolean_cols:
     selected_cols = st.sidebar.multiselect("Select boolean columns", boolean_cols, key="bool_cols")
     if st.sidebar.button("➕ Add Plot"):
@@ -84,7 +85,7 @@ elif col_type == "Boolean" and boolean_cols:
                 "column": col
             })
 
-# --- Datetime ---
+# Datetime plots
 elif col_type == "Datetime" and datetime_cols:
     selected_col = st.sidebar.selectbox("Select datetime column", datetime_cols, key="dt_col")
     freq = st.sidebar.selectbox("Resample Frequency", ["D", "W", "ME", "QE", "YE"], index=2, key="dt_freq")
@@ -103,7 +104,7 @@ elif col_type == "Datetime" and datetime_cols:
             "value_col": value_col
         })
 
-# --- Mixed (Cat × Cat Heatmap) ---
+#  Mixed (Cat × Cat Heatmap) 
 elif col_type == "Mixed":
     st.sidebar.markdown("Create a heatmap between two categorical columns")
     cat1 = st.sidebar.selectbox("Categorical Column 1", categorical_cols, key="cat1")
@@ -116,7 +117,7 @@ elif col_type == "Mixed":
             "col": cat2
         })
 
-# ------------------ Plot Rendering ------------------
+# Plot Rendering as chosen from sidebar
 left_col, right_col = st.columns(2)
 
 for i, plot_data in enumerate(st.session_state["plots"]):
@@ -242,7 +243,7 @@ for i, plot_data in enumerate(st.session_state["plots"]):
             except Exception as e:
                 st.error(f"⚠️ Error rendering plot: {e}")
 
-# --- Navigation ---
+# Links between pages and logout button
 col1, col2, col3, col4 = st.columns(4)
 with col1:
     if st.button("🏠 Back to Home"):
