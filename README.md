@@ -12,11 +12,12 @@ Whether you're a data analyst, finance professional, or business stakeholder, th
 ## 🚀 Features That Make a Difference
 
 ✅ Upload CSV or Excel files  
-✅ Automatic detection of numeric, categorical, datetime, and text columns  
+✅ Automatic detection of numeric, categorical, boolean, datetime, and text columns  
 ✅ Data cleaning (null handling, type conversion, duplicates, outliers)  
 ✅ Outlier removal via IQR (optional toggle)  
 ✅ Insightful visualizations: line plots, bar charts, area plots, treemaps, heatmaps  
-✅ Built with modular and production-ready Python code  
+✅ AI-powered summarization using the OpenAI API
+✅ Built with modular and production-ready Python code
 
 ---
 
@@ -28,11 +29,13 @@ finance-insight-dashboard/
 ├── pages/                   # Streamlit multi-page files
 │   ├── 1_Overview.py
 │   ├── 2_Data_Analysis.py
-│   └── 3_Data_Visualization.py
+│   ├── 3_Data_Visualization.py
+│   └── 4_OpenAI_Summary.py
 ├── src/                     # Core logic and utilities
 │   ├── auth.py
 │   └── preprocess.py
 ├── .streamlit
+│   ├── secrets.toml
 │   └── config.toml          # Streamlit config (e.g., theme, secrets)
 ├── requirements.txt         # Python dependencies
 ├── .gitignore               # Files to ignore in Git
@@ -47,6 +50,7 @@ finance-insight-dashboard/
 - **Streamlit** – web app interface
 - **Pandas** – data manipulation
 - **Matplotlib & Plotly** – plotting
+- **OpenAI API** – for natural-language data summaries
 - **Custom Preprocessing** – robust cleaning, type inference, and outlier removal
 
 ---
@@ -78,7 +82,14 @@ source .venv/bin/activate        # On Windows: .venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 ```
 
-### 3. Launch the App
+### 3. Add OpenAI API Key
+
+```bash
+[openai]
+api_key = "sk-..."
+```
+
+### 4. Launch the App
 
 ```bash
 streamlit run Home.py
@@ -91,7 +102,7 @@ streamlit run Home.py
 You can view the hosted version here:
 
 👉 [https://finance-insight-dashboard.streamlit.app/](https://finance-insight-dashboard.streamlit.app)
-
+[username - admin, password - 1234 [only for sampling]]
 *(Note: Deployment powered by [Streamlit Cloud](https://streamlit.io/cloud))*
 
 ---
@@ -99,10 +110,10 @@ You can view the hosted version here:
 ## 📊 Sample Use Cases
 
 - Financial report generation
-- Transactional data exploration
-- Investment or sales data visualizations
-- Internal dashboards for finance teams
-- Teaching data wrangling or EDA with real-world datasets
+- Exploratory analysis of transactional datasets
+- Investment, revenue, or sales trend visualization
+- Real-time summaries of financial files using GPT
+- Teaching EDA and AI summarization in finance
 
 ---
 
@@ -112,6 +123,7 @@ Unlike most dashboards, this one:
 - **understands your data** without hardcoded assumptions
 - **cleans messy data** with smart type and outlier handling
 - **adapts visualizations** to different data types dynamically
+- **summarizes insights using AI,** not static code
 - lets you **explore and learn** from data, not just view it
 
 ---
