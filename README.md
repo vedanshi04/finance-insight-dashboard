@@ -17,7 +17,7 @@ Whether you're a data analyst, finance professional, or business stakeholder, th
 ✅ Outlier removal via IQR (optional toggle)  
 ✅ Insightful visualizations: line plots, bar charts, area plots, treemaps, heatmaps  
 ✅ AI-powered summarization using the OpenAI API
-✅ Built with modular and production-ready Python code
+
 
 ---
 
@@ -102,6 +102,7 @@ streamlit run Home.py
 You can view the hosted version here:
 
 👉 [https://finance-insight-dashboard.streamlit.app/](https://finance-insight-dashboard.streamlit.app)
+
 [username - admin, password - 1234 [only for sampling]]
 *(Note: Deployment powered by [Streamlit Cloud](https://streamlit.io/cloud))*
 
